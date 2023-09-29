@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use App\Models\Employee;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class EmployeeController extends Controller
@@ -89,21 +91,15 @@ class EmployeeController extends Controller
 
     public function employeeByDepartment()
     {
-        $employees = Employee::with('department')->get();
-
         return Inertia::render('Employee/Graphic', [
-            'employees' => $employees,
-            'count' => $employees->count()
+            'data' => Department::withCount('employees')->get()
         ]);
     }
 
     public function reports()
     {
-        $employees = Employee::with('department')->get();
-
         return Inertia::render('Employee/Reports', [
-            'employees' => $employees,
-            'count' => $employees->count(),
+            'employees' => Employee::with('department:name')->get(),
             'departments' => Department::all()
         ]);
     }
